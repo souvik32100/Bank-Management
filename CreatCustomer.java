@@ -1,0 +1,190 @@
+import java.lang.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.sql.*;
+import java.util.*;
+public class CreatCustomer extends JFrame implements ActionListener
+{
+	private JLabel lb1,lb2,lb3,lb4,lb5,lb6,imgLabel;
+	private JTextField tf1,tf2,tf3,tf4,tf5;
+	private JButton bt1,bt2,bt3,bt4;
+	private JPanel panel;
+	private EmployeeHome eh;
+	private ImageIcon img;
+	private Random r=new Random();
+	public CreatCustomer(EmployeeHome eh)
+	{
+		super("Creat Customer");
+		this.eh=eh;
+		this.setSize(550,500);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		panel= new JPanel();
+		panel.setLayout(null);
+		Font f1 = new Font("Helvetica", Font.BOLD, 15);
+		
+		lb1=new JLabel("Account Name:");
+		lb1.setBounds(100,100,150,40);
+		lb1.setForeground(Color.WHITE);
+		lb1.setFont(f1);
+		panel.add(lb1);
+		
+		lb2=new JLabel("Account Id:");
+		lb2.setBounds(100,150,150,40);
+		lb2.setForeground(Color.WHITE);
+		lb2.setFont(f1);
+		panel.add(lb2);
+		
+		lb3=new JLabel("Phone Number:");
+		lb3.setBounds(100,200,150,40);
+		lb3.setForeground(Color.WHITE);
+		lb3.setFont(f1);
+		panel.add(lb3);
+		lb6=new JLabel(" +880");
+		lb6.setBounds(220,200,40,40);
+		lb6.setOpaque(true);
+		lb6.setBackground(Color.GREEN);
+		panel.add(lb6);
+		
+		lb4=new JLabel("Account Number:");
+		lb4.setBounds(100,250,150,40);
+		lb4.setForeground(Color.WHITE);
+		lb4.setForeground(Color.WHITE);
+		panel.add(lb4);
+		
+		lb5=new JLabel("Password");
+		lb5.setBounds(100,300,150,40);
+		lb5.setForeground(Color.WHITE);
+		lb5.setForeground(Color.WHITE);
+		panel.add(lb5);
+		
+		tf1=new JTextField();
+		tf1.setBounds(260,100,150,40);
+		panel.add(tf1);
+		
+		tf2=new JTextField();
+		tf2.setBounds(260,150,150,40);
+		panel.add(tf2);
+		
+		tf3=new JTextField();
+		tf3.setBounds(260,200,150,40);
+		panel.add(tf3);
+		
+		tf4=new JTextField();
+		tf4.setBounds(260,250,150,40);
+		panel.add(tf4);
+		
+		tf5=new JTextField();
+		tf5.setBounds(260,300,150,40);
+		tf5.setEnabled(false);
+		tf5.setBackground(Color.RED);
+		panel.add(tf5);
+		
+		bt1=new JButton("Create");
+		bt1.setBounds(110,350,80,40);
+		bt1.addActionListener(this);
+		panel.add(bt1);
+		
+		bt2=new JButton("Back");
+		bt2.setBounds(210,350,80,40);
+		bt2.addActionListener(this);
+		panel.add(bt2);
+		
+		bt3=new JButton("Logout");
+		bt3.setBounds(310,350,80,40);
+		bt3.addActionListener(this);
+		panel.add(bt3);
+		bt4=new JButton("Genarate");
+		bt4.setBounds(420,300,100,40);
+		bt4.addActionListener(this);
+		panel.add(bt4);
+
+		img = new ImageIcon("image.jpg");
+		imgLabel = new JLabel(img);
+		imgLabel.setBounds(0, 0, 800, 600);
+		panel.add(imgLabel);
+		
+		this.add(panel);
+	}
+	
+	public void actionPerformed(ActionEvent ae)
+	{
+		if(ae.getSource().equals(bt1))
+		{
+			insertIntoDB();
+			
+		}
+		
+		else if(ae.getSource().equals(bt2))
+		{
+			eh.setVisible(true);
+			this.setVisible(false);
+		}
+		else if(ae.getSource().equals(bt3))
+		{
+			Login o=new Login();
+			o.setVisible(true);
+			this.setVisible(false);
+		}
+		else if(ae.getSource().equals(bt4))
+		{
+			
+			long x=r.nextInt(10000000);
+			tf5.setText(""+x);
+
+		}
+		
+
+	}
+	public void insertIntoDB()
+	{
+		String newId = tf2.getText();
+		String newPass = tf5.getText();
+		String eName = tf1.getText();
+		
+		String accNo=tf4.getText();
+		
+		int status = 0;
+		
+		
+		String query2 = "INSERT INTO Login VALUES ('"+newId+"','"+newPass+"',"+status+");";
+		//System.out.println(query1);
+		System.out.println(query2);
+        try
+		{
+			String y=Integer.toString(r.nextInt(1000000));
+			String a="";
+			double x=Double.parseDouble(tf3.getText());
+			String phnNo = tf3.getText();
+
+			String query1 = "INSERT INTO customer VALUES ('"+newId+"','"+eName+"','"+ phnNo+"',"+accNo+");";
+			String query3 = "INSERT INTO Account VALUES ('"+accNo+"','"+0+"');";
+
+			String query4 = "INSERT INTO Transaction VALUES ('"+y+"','"+accNo+"','"+a+"','"+0+"',sysdate());";
+
+			String query5 = "INSERT INTO Transaction2 VALUES ('"+accNo+"','"+a+"');";
+
+			
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/oop1e14", "root", "");
+			Statement stm = con.createStatement();
+			stm.execute(query1);
+			stm.execute(query2);
+			stm.execute(query3);
+			stm.execute(query4);
+			stm.execute(query5);
+			stm.close();
+			con.close();
+			JOptionPane.showMessageDialog(this, "Success !!!");
+			eh.setVisible(true);
+			this.setVisible(false);
+			
+		}
+        catch(Exception ex)
+		{
+			System.out.println("Exception : " +ex.getMessage());
+			JOptionPane.showMessageDialog(this, "Oops !!!");
+        }
+    }	
+	
+}

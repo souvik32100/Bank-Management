@@ -1,0 +1,2 @@
+SELECT * from Transaction2 where `accountNumber`=(select `accountNumber` from Customer where accountId='"+id+"');
+SELECT * from customer where `accountNumber`=(SELECT `accountNumber` from Transaction2 where `accountNumber`=(select `accountNumber` from Customer where accountId='"+id+"'));
